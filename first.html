@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Player</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    #videoPlayer {
+      width: 50%;
+      height: 40%;
+    }
+
+    #innerSelectJava {
+      display: none;
+    }
+
+    #controls {
+      display: flex;
+      margin-top: 20px;
+    }
+
+    button {
+      margin: 0 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <label for="categorySelect">Select a category:</label>
+  <select id="categorySelect" onchange="changeCategory()">
+    <option value="java">Java</option>
+    <option value="python">Python</option>
+    <option value="javascript">JavaScript</option>
+  </select>
+
+  <div id="innerSelectJava">
+    <label for="javaSelect">Select a Java video:</label>
+    <select id="javaSelect" onchange="changeVideo()">
+      <option value="video_01_1.mp4">Video 1</option>
+      <option value="videos_01_2.mp4">Video 2</option>
+    </select>
+  </div>
+
+  <div id="innerSelectPython" style="display: none;">
+    <label for="pythonSelect">Select a Python video:</label>
+    <select id="pythonSelect" onchange="changeVideo()">
+      <option value="video_02_1.mp4">Video 3</option>
+      <option value="video_02_2.mp4">Video 4</option>
+    </select>
+  </div>
+
+  <div id="innerSelectJavaScript" style="display: none;">
+    <label for="javascriptSelect">Select a JavaScript video:</label>
+    <select id="javascriptSelect" onchange="changeVideo()">
+      <option value="video_03_1.mp4">Video 5</option>
+      <option value="video_03_2.mp4">Video 6</option>
+    </select>
+  </div>
+
+  <video id="videoPlayer" controls>
+    <source id="videoSource" src="video_01.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <div id="controls">
+    <button onclick="playPrevious()">Previous</button>
+    <button onclick="playPause()">Pause</button>
+    <button onclick="playPlay()">Play</button>
+    <button onclick="playNext()">Next</button>
+  </div>
+
+  <script>
+    const videoPlayer = document.getElementById('videoPlayer');
+    const videoSource = document.getElementById('videoSource');
+    const categorySelect = document.getElementById('categorySelect');
+    const innerSelectJava = document.getElementById('innerSelectJava');
+    const innerSelectPython = document.getElementById('innerSelectPython');
+    const innerSelectJavaScript = document.getElementById('innerSelectJavaScript');
+
+    let currentIndexJava = 0;
+    let currentIndexPython = 0;
+    let currentIndexJavaScript = 0;
+
+    function changeCategory() {
+      const selectedCategory = categorySelect.value;
+      
+      // Hide all inner select divs
+      innerSelectJava.style.display = 'none';
+      innerSelectPython.style.display = 'none';
+      innerSelectJavaScript.style.display = 'none';
+
+      // Show the inner select div based on the selected category
+      if (selectedCategory === 'java') {
+        innerSelectJava.style.display = 'block';
+      } else if (selectedCategory === 'python') {
+        innerSelectPython.style.display = 'block';
+      } else if (selectedCategory === 'javascript') {
+        innerSelectJavaScript.style.display = 'block';
+      }
+    }
+
+    function changeVideo() {
+      let selectedVideo;
+      if (categorySelect.value === 'java') {
+        selectedVideo = document.getElementById('javaSelect').options[currentIndexJava].value;
+      } else if (categorySelect.value === 'python') {
+        selectedVideo = document.getElementById('pythonSelect').options[currentIndexPython].value;
+      } else if (categorySelect.value === 'javascript') {
+        selectedVideo = document.getElementById('javascriptSelect').options[currentIndexJavaScript].value;
+      }
+
+      videoSource.src = selectedVideo;
+      videoPlayer.load();
+    }
+
+    function playPrevious() {
+      if (categorySelect.value === 'java' && currentIndexJava > 0) {
+        currentIndexJava--;
+        document.getElementById('javaSelect').selectedIndex = currentIndexJava;
+      } else if (categorySelect.value === 'python' && currentIndexPython > 0) {
+        currentIndexPython--;
+        document.getElementById('pythonSelect').selectedIndex = currentIndexPython;
+      } else if (categorySelect.value === 'javascript' && currentIndexJavaScript > 0) {
+        currentIndexJavaScript--;
+        document.getElementById('javascriptSelect').selectedIndex = currentIndexJavaScript;
+      }
+      changeVideo();
+      videoPlayer.play();
+    }
+
+    function playNext() {
+      let options;
+      if (categorySelect.value === 'java') {
+        options = document.getElementById('javaSelect').options;
+        currentIndexJava++;
+      } else if (categorySelect.value === 'python') {
+        options = document.getElementById('pythonSelect').options;
+        currentIndexPython++;
+      } else if (categorySelect.value === 'javascript') {
+        options = document.getElementById('javascriptSelect').options;
+        currentIndexJavaScript++;
+      }
+
+      if (currentIndexJava < options.length || currentIndexPython < options.length || currentIndexJavaScript < options.length) {
+        if (categorySelect.value === 'java') {
+          document.getElementById('javaSelect').selectedIndex = currentIndexJava;
+        } else if (categorySelect.value === 'python') {
+          document.getElementById('pythonSelect').selectedIndex = currentIndexPython;
+        } else if (categorySelect.value === 'javascript') {
+          document.getElementById('javascriptSelect').selectedIndex = currentIndexJavaScript;
+        }
+
+        changeVideo();
+        videoPlayer.play();
+      }
+    }
+
+    function playPlay() {
+      videoPlayer.play();
+    }
+
+    function playPause() {
+      videoPlayer.pause();
+    }
+  </script>
+
+</body>
+</html>
